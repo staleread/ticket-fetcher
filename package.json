@@ -1,0 +1,8 @@
+{
+  "name": "ticket-fetcher",
+  "version": "1.0.0",
+  "description": "Simple API for fetching available tickets for specific event",
+  "scripts": {},
+  "author": "staleread",
+  "license": "ISC"
+}
