@@ -4,5 +4,8 @@
   "description": "Simple API for fetching available tickets for specific event",
   "scripts": {},
   "author": "staleread",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "@biomejs/biome": "^1.8.3"
+  }
 }
