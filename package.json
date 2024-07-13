@@ -5,6 +5,10 @@
   "scripts": {},
   "author": "staleread",
   "license": "ISC",
+  "scripts": {
+    "check": "npx @biomejs/biome check ./src",
+    "fix": "npx @biomejs/biome check --write ./src"
+  },
   "devDependencies": {
     "@biomejs/biome": "^1.8.3",
     "@nestjs/cli": "^10.4.2"
