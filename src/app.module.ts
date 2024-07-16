@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
+import { ConfigModule } from '@nestjs/config';
+import { TicketModule } from './features/ticket/ticket.module';
+import { TheaterApiModule } from './infrastructure/theater-api/theater-api.module';
 
 @Module({
-  imports: [],
-  controllers: [AppController],
-  providers: [],
+  imports: [ConfigModule.forRoot(), TicketModule, TheaterApiModule],
 })
 export class AppModule {}
