@@ -1,10 +1,12 @@
 {
   "name": "ticket-fetcher",
   "version": "1.0.0",
-  "description": "Simple API for fetching available tickets for specific event",
-  "scripts": {},
-  "author": "staleread",
   "license": "ISC",
+  "description": "Simple API for fetching available tickets for specific event",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/staleread/ticket-fetcher"
+  },
   "scripts": {
     "check": "npx @biomejs/biome check ./src",
     "fix": "npx @biomejs/biome check --write ./src"
@@ -15,6 +17,7 @@
   },
   "dependencies": {
     "@nestjs/common": "^10.3.10",
+    "@nestjs/config": "^3.2.3",
     "@nestjs/core": "^10.3.10",
     "@nestjs/platform-express": "^10.3.10"
   }
