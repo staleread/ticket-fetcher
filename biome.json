@@ -34,8 +34,7 @@
 				"noMisleadingInstantiator": "error",
 				"noUnsafeDeclarationMerging": "error"
 			}
-		},
-		"ignore": ["**/.eslintrc.js"]
+		}
 	},
 	"javascript": {
 		"formatter": {
@@ -48,7 +47,10 @@
 			"bracketSameLine": false,
 			"quoteStyle": "single",
 			"attributePosition": "auto"
-		}
+		},
+    "parser": {
+      "unsafeParameterDecoratorsEnabled": true
+    }
 	},
 	"overrides": [
 		{
