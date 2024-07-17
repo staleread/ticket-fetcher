@@ -11,21 +11,19 @@ import { AvailableTicketDto } from './dto/available-ticket.dto';
 export class TicketService {
   constructor(private readonly _theaterApiService: TheaterApiService) {}
 
-  async getAvailableTickets(
-    eventId: number,
-  ): Promise<Result<AvailableTicketDto[]>> {
+  async getAvailableTickets(eventId: number): Promise<Result<AvailableTicketDto[]>> {
     const pricesResult: Result<PriceDto[]> =
       await this._theaterApiService.getPricesPerZone(eventId);
 
     if (pricesResult.isFailure()) {
-      return Result.failure(pricesResult.error);
+      return Result.fromFailure(pricesResult.error);
     }
 
     const theaterLayoutResult: Result<TheaterLayoutDto> =
       await this._theaterApiService.getTheaterLayout(eventId);
 
     if (theaterLayoutResult.isFailure()) {
-      return Result.failure(theaterLayoutResult.error);
+      return Result.fromFailure(theaterLayoutResult.error);
     }
 
     const prices: PriceDto[] = pricesResult.value;
@@ -37,10 +35,10 @@ export class TicketService {
       (seat: SeatDto) => seat.statusCode === AVAILABLE_SEAT_STATUS,
     );
 
-    return this._toAvailableTickets(availableSeats, sections, prices);
+    return this._toAvailableTicketsResult(availableSeats, sections, prices);
   }
 
-  private _toAvailableTickets(
+  private _toAvailableTicketsResult(
     availableSeats: SeatDto[],
     sections: SectionDto[],
     prices: PriceDto[],
@@ -58,7 +56,7 @@ export class TicketService {
       const price: PriceDto | undefined = priceByZoneIdMap.get(seat.zoneId);
 
       if (price === undefined) {
-        return Result.failure('Price not found');
+        return Result.failure('Price not found', 404);
       }
 
       const section: SectionDto | undefined = sectionByIdMap.get(
@@ -66,7 +64,7 @@ export class TicketService {
       );
 
       if (section === undefined) {
-        return Result.failure('Section not found');
+        return Result.failure('Section not found', 404);
       }
 
       tickets.push({

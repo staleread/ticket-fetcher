@@ -2,9 +2,11 @@
 
 ## Task
 
-Build a simple service which will fetch concert tickets from a [website](https://www.centertheatregroup.org/booking/syos?perf_no=21920&facility_no=10) and return them to user through a HTTP call 
+Build a simple service which will fetch concert tickets from a [website](https://www.centertheatregroup.org/booking/syos?perf_no=21920&facility_no=10)
+and return them to user through a HTTP call
 
 Ticket data should contain these fields:
+
 - Section
 - Row
 - Seat number
