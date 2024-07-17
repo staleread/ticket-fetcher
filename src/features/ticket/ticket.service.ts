@@ -43,12 +43,8 @@ export class TicketService {
     sections: SectionDto[],
     prices: PriceDto[],
   ): Result<AvailableTicketDto[]> {
-    const priceByZoneIdMap = new Map<string, PriceDto>(
-      prices.map((p) => [p.zoneId, p]),
-    );
-    const sectionByIdMap = new Map<string, SectionDto>(
-      sections.map((s) => [s.id, s]),
-    );
+    const priceByZoneIdMap = new Map<string, PriceDto>(prices.map((p) => [p.zoneId, p]));
+    const sectionByIdMap = new Map<string, SectionDto>(sections.map((s) => [s.id, s]));
 
     const tickets: AvailableTicketDto[] = [];
 
@@ -59,9 +55,7 @@ export class TicketService {
         return Result.failure('Price not found', 404);
       }
 
-      const section: SectionDto | undefined = sectionByIdMap.get(
-        seat.sectionId,
-      );
+      const section: SectionDto | undefined = sectionByIdMap.get(seat.sectionId);
 
       if (section === undefined) {
         return Result.failure('Section not found', 404);

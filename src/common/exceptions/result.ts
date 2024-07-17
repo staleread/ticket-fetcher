@@ -1,4 +1,4 @@
-export type ErrorResult = {message: string, code: number};
+export type ErrorResult = { message: string; code: number };
 
 export class Result<T> {
   constructor(
@@ -11,7 +11,7 @@ export class Result<T> {
   }
 
   static failure(message: string, code: number): Result<any> {
-    return new Result<any>(undefined, {message, code});
+    return new Result<any>(undefined, { message, code });
   }
 
   static fromFailure(errorResult: ErrorResult): Result<any> {
