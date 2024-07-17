@@ -2,6 +2,7 @@ export default () => ({
   port: Number(process.env.PORT) || 5000,
   theaterApi: {
     domain: process.env.THEATER_API_DOMAIN || 'ctg-proxy-live.stageblocks.net',
+    timeout: Number(process.env.THEATER_API_TIMEOUT) || 60_000,
     loginInfo: {
       sessionKey:
         process.env.THEATER_API_SESSION_KEY ||
