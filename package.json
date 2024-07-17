@@ -8,6 +8,7 @@
     "url": "https://github.com/staleread/ticket-fetcher"
   },
   "scripts": {
+    "start": "nest start",
     "check": "npx @biomejs/biome check ./src",
     "fix": "npx @biomejs/biome check --write ./src"
   },
