@@ -20,7 +20,6 @@ export class TheaterApiService {
 
     const domain = configService.get<string>('theaterApi.domain')!;
     const timeout = configService.get<number>('theaterApi.timeout')!;
-    console.log(timeout)
 
     this._httpClient = axios.create({
       baseURL: `https://${domain}/tessitura/ctglive`,
