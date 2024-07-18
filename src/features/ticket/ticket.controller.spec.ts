@@ -10,11 +10,7 @@ describe('TicketController', () => {
   let ticketService: TicketService;
 
   const mockTicketService = {
-    getAvailableTickets: async (eventId: number) => {},
-  };
-
-  const randomNumberBetween = (min: number, max: number): number => {
-    return Math.floor(Math.random() * (max - min + 1) + min);
+    getAvailableTickets: async (_: number) => {},
   };
 
   beforeEach(async () => {
@@ -64,7 +60,7 @@ describe('TicketController', () => {
       jest
         .spyOn(ticketService, 'getAvailableTickets')
         .mockImplementation(
-          (eventId: number) => new Promise((resolve) => resolve(Result.success(tickets))),
+          (_: number) => new Promise((resolve) => resolve(Result.success(tickets))),
         );
 
       expect(await ticketController.getAvailableTickets(validEventId)).toBe(tickets);
@@ -76,7 +72,7 @@ describe('TicketController', () => {
       jest
         .spyOn(ticketService, 'getAvailableTickets')
         .mockImplementation(
-          (eventId: number) =>
+          (_: number) =>
             new Promise((resolve) => resolve(Result.failure(errorMessage, 500))),
         );
 

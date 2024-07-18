@@ -11,10 +11,10 @@ describe('TicketService', () => {
   let ticketService: TicketService;
 
   const mockTheaterAPIService = {
-    getPricesPerZone: async (eventId: number): Promise<Result<PriceDto[]>> => {
+    getPricesPerZone: async (_: number): Promise<Result<PriceDto[]>> => {
       return new Promise((res) => res(Result.success([])));
     },
-    getTheaterLayout: async (eventId: number): Promise<Result<TheaterLayoutDto>> => {
+    getTheaterLayout: async (_: number): Promise<Result<TheaterLayoutDto>> => {
       return new Promise((res) =>
         res(
           Result.success({
@@ -24,10 +24,6 @@ describe('TicketService', () => {
         ),
       );
     },
-  };
-
-  const randomNumberBetween = (min: number, max: number): number => {
-    return Math.floor(Math.random() * (max - min + 1) + min);
   };
 
   beforeEach(async () => {
@@ -116,14 +112,13 @@ describe('TicketService', () => {
       jest
         .spyOn(mockTheaterAPIService, 'getPricesPerZone')
         .mockImplementation(
-          (eventId: number) =>
-            new Promise((resolve) => resolve(Result.success(mockPrices))),
+          (_: number) => new Promise((resolve) => resolve(Result.success(mockPrices))),
         );
 
       jest
         .spyOn(mockTheaterAPIService, 'getTheaterLayout')
         .mockImplementation(
-          (eventId: number) =>
+          (_: number) =>
             new Promise((resolve) => resolve(Result.success(mockTheaterLayout))),
         );
 
@@ -158,7 +153,7 @@ describe('TicketService', () => {
           },
           {
             id: '222',
-            statusCode: '8',    // not available
+            statusCode: '8', // not available
             zoneId: '2',
             rowNumber: '21',
             seatNumber: 'Y',
@@ -181,40 +176,16 @@ describe('TicketService', () => {
         ],
       };
 
-      const expectedTickets: AvailableTicketDto[] = [
-        {
-          seatId: '111',
-          seatNumber: 'X',
-          rowNumber: '21',
-          price: 40,
-          section: {
-            id: '1',
-            description: 'Balcony',
-          },
-        },
-        {
-          seatId: '222',
-          seatNumber: 'Y',
-          rowNumber: '21',
-          price: 80,
-          section: {
-            id: '1',
-            description: 'Balcony',
-          },
-        },
-      ];
-
       jest
         .spyOn(mockTheaterAPIService, 'getPricesPerZone')
         .mockImplementation(
-          (eventId: number) =>
-            new Promise((resolve) => resolve(Result.success(mockPrices))),
+          (_: number) => new Promise((resolve) => resolve(Result.success(mockPrices))),
         );
 
       jest
         .spyOn(mockTheaterAPIService, 'getTheaterLayout')
         .mockImplementation(
-          (eventId: number) =>
+          (_: number) =>
             new Promise((resolve) => resolve(Result.success(mockTheaterLayout))),
         );
 
@@ -222,6 +193,94 @@ describe('TicketService', () => {
 
       expect(result.isSuccess()).toBe(true);
       expect(result.value.length).toBe(2);
+    });
+
+    it('should throw if price cannot be found by zoneId', async () => {
+      const validEventId = 20000;
+
+      const mockPrices: PriceDto[] = [];
+
+      const mockTheaterLayout: TheaterLayoutDto = {
+        seats: [
+          {
+            id: '333',
+            statusCode: '0',
+            zoneId: '1', // no such zone
+            rowNumber: '22',
+            seatNumber: '3',
+            sectionId: '1',
+          },
+        ],
+        sections: [
+          {
+            id: '1',
+            description: 'Balcony',
+          },
+        ],
+      };
+
+      jest
+        .spyOn(mockTheaterAPIService, 'getPricesPerZone')
+        .mockImplementation(
+          (_: number) => new Promise((resolve) => resolve(Result.success(mockPrices))),
+        );
+
+      jest
+        .spyOn(mockTheaterAPIService, 'getTheaterLayout')
+        .mockImplementation(
+          (_: number) =>
+            new Promise((resolve) => resolve(Result.success(mockTheaterLayout))),
+        );
+
+      const result = await ticketService.getAvailableTickets(validEventId);
+
+      expect(result.isFailure()).toBe(true);
+      expect(result.error.message).toBe('Price not found');
+      expect(result.error.code).toBe(404);
+    });
+
+    it('should throw if section is not found', async () => {
+      const validEventId = 20000;
+
+      const mockPrices: PriceDto[] = [
+        {
+          zoneId: '1',
+          price: 40,
+        },
+      ];
+
+      const mockTheaterLayout: TheaterLayoutDto = {
+        seats: [
+          {
+            id: '333',
+            statusCode: '0',
+            zoneId: '1',
+            rowNumber: '22',
+            seatNumber: '3',
+            sectionId: '1', // no such section
+          },
+        ],
+        sections: [],
+      };
+
+      jest
+        .spyOn(mockTheaterAPIService, 'getPricesPerZone')
+        .mockImplementation(
+          (_: number) => new Promise((resolve) => resolve(Result.success(mockPrices))),
+        );
+
+      jest
+        .spyOn(mockTheaterAPIService, 'getTheaterLayout')
+        .mockImplementation(
+          (_: number) =>
+            new Promise((resolve) => resolve(Result.success(mockTheaterLayout))),
+        );
+
+      const result = await ticketService.getAvailableTickets(validEventId);
+
+      expect(result.isFailure()).toBe(true);
+      expect(result.error.message).toBe('Section not found');
+      expect(result.error.code).toBe(404);
     });
 
     it('should return failure on invalid eventId', async () => {
