@@ -12,6 +12,10 @@ export class TicketService {
   constructor(private readonly _theaterApiService: TheaterApiService) {}
 
   async getAvailableTickets(eventId: number): Promise<Result<AvailableTicketDto[]>> {
+    if (eventId < 1) {
+      return Result.failure('Event id should be greater than zero', 400);
+    }
+
     const pricesResult: Result<PriceDto[]> =
       await this._theaterApiService.getPricesPerZone(eventId);
 
