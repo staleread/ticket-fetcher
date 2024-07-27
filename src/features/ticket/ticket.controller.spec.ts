@@ -1,4 +1,3 @@
-import { HttpException } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 import { Result } from '../../common/exceptions/result';
 import { AvailableTicketDto } from './dto/available-ticket.dto';
