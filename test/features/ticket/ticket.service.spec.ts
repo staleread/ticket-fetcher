@@ -1,11 +1,11 @@
 import { HttpException } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
-import { Result } from '../../common/exceptions/result';
-import { PriceDto } from '../../infrastructure/theater-api/dto/price.dto';
-import { TheaterLayoutDto } from '../../infrastructure/theater-api/dto/theater-layout.dto';
-import { TheaterApiService } from '../../infrastructure/theater-api/theater-api.service';
-import { AvailableTicketDto } from './dto/available-ticket.dto';
-import { TicketService } from './ticket.service';
+import { Result } from '../../../src/common/exceptions/result';
+import { PriceDto } from '../../../src/infrastructure/theater-api/dto/price.dto';
+import { TheaterLayoutDto } from '../../../src/infrastructure/theater-api/dto/theater-layout.dto';
+import { TheaterApiService } from '../../../src/infrastructure/theater-api/theater-api.service';
+import { AvailableTicketDto } from '../../../src/features/ticket/dto/available-ticket.dto';
+import { TicketService } from '../../../src/features/ticket/ticket.service';
 
 describe('TicketService', () => {
   let ticketService: TicketService;

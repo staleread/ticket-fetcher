@@ -1,8 +1,8 @@
 import { Test } from '@nestjs/testing';
-import { Result } from '../../common/exceptions/result';
-import { AvailableTicketDto } from './dto/available-ticket.dto';
-import { TicketController } from './ticket.controller';
-import { TicketService } from './ticket.service';
+import { Result } from '../../../src/common/exceptions/result';
+import { AvailableTicketDto } from '../../../src/features/ticket/dto/available-ticket.dto';
+import { TicketController } from '../../../src/features/ticket/ticket.controller';
+import { TicketService } from '../../../src/features/ticket/ticket.service';
 
 describe('TicketController', () => {
   let ticketController: TicketController;
