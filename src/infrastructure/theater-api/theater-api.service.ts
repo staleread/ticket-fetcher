@@ -12,8 +12,8 @@ import { TheaterLayoutDto } from './dto/theater-layout.dto';
 export class TheaterApiService {
   static REQUEST_ID = 1;
 
-  private readonly _loginInfo: LoginInfo;
-  private readonly _httpClient: any;
+  private readonly loginInfo: LoginInfo;
+  private readonly httpClient: any;
 
   constructor(configService: ConfigService) {
     const loginInfo: LoginInfo | undefined =
@@ -23,7 +23,7 @@ export class TheaterApiService {
       throw new Error('Failed to retrieve API login info from config');
     }
 
-    this._loginInfo = loginInfo;
+    this.loginInfo = loginInfo;
 
     const domain: string | undefined = configService.get<string>('theaterApi.domain');
 
@@ -37,7 +37,7 @@ export class TheaterApiService {
       throw new Error('Failed to retrieve API timeout from config');
     }
 
-    this._httpClient = axios.create({
+    this.httpClient = axios.create({
       baseURL: `https://${domain}/tessitura/ctglive`,
       timeout,
     });
@@ -45,32 +45,32 @@ export class TheaterApiService {
 
   async getPricesPerZone(eventId: number): Promise<Result<PriceDto[]>> {
     const queryBlobParams = {
-      SessionKey: this._loginInfo.sessionKey,
+      SessionKey: this.loginInfo.sessionKey,
       iPerf_no: eventId,
-      iModeOfSale: this._loginInfo.modeOfSale,
+      iModeOfSale: this.loginInfo.modeOfSale,
     };
 
     try {
-      const response = await this._httpClient.get('', {
+      const response = await this.httpClient.get('', {
         params: {
           id: TheaterApiService.REQUEST_ID,
           method: 'GetPerformanceDetailWithDiscountingEx',
-          params: this._toBase64String(queryBlobParams),
+          params: this.toBase64String(queryBlobParams),
         },
       });
 
-      return this._retrievePrices(response.data);
+      return this.retrievePrices(response.data);
     } catch (err) {
-      const errorResult: ErrorResult = this._resolveRequestError(err);
+      const errorResult: ErrorResult = this.resolveRequestError(err);
       return Result.fromFailure(errorResult);
     }
   }
 
   async getTheaterLayout(eventId: number): Promise<Result<TheaterLayoutDto>> {
     const queryBlobParams = {
-      sSessionKey: this._loginInfo.sessionKey,
-      iModeOfSale: this._loginInfo.modeOfSale,
-      iSourceNumber: this._loginInfo.sourceNumber,
+      sSessionKey: this.loginInfo.sessionKey,
+      iModeOfSale: this.loginInfo.modeOfSale,
+      iSourceNumber: this.loginInfo.sourceNumber,
       iPerformanceNumber: eventId,
       iPackageNumber: 0,
       cSummaryOnly: 'N',
@@ -79,22 +79,22 @@ export class TheaterApiService {
     };
 
     try {
-      const response = await this._httpClient.get('', {
+      const response = await this.httpClient.get('', {
         params: {
           id: TheaterApiService.REQUEST_ID,
           method: 'GetSeatsBriefWithMOS',
-          params: this._toBase64String(queryBlobParams),
+          params: this.toBase64String(queryBlobParams),
         },
       });
 
-      return this._retrieveTheaterLayout(response.data);
+      return this.retrieveTheaterLayout(response.data);
     } catch (err) {
-      const errorResult: ErrorResult = this._resolveRequestError(err);
+      const errorResult: ErrorResult = this.resolveRequestError(err);
       return Result.fromFailure(errorResult);
     }
   }
 
-  private _retrievePrices(responseBody: any): Result<PriceDto[]> {
+  private retrievePrices(responseBody: any): Result<PriceDto[]> {
     if (responseBody.error) {
       return Result.failure(`Error from external API host: ${responseBody.error}`, 502);
     }
@@ -110,7 +110,7 @@ export class TheaterApiService {
     return Result.success(prices);
   }
 
-  private _retrieveTheaterLayout(responseBody: any): Result<TheaterLayoutDto> {
+  private retrieveTheaterLayout(responseBody: any): Result<TheaterLayoutDto> {
     if (responseBody.error) {
       return Result.failure(`Error from external API host: ${responseBody.error}`, 502);
     }
@@ -140,7 +140,7 @@ export class TheaterApiService {
     return Result.success(layout);
   }
 
-  private _resolveRequestError(error: any): ErrorResult {
+  private resolveRequestError(error: any): ErrorResult {
     if (error.response) {
       return {
         message: `Got bad response from external API with status: "${error.response.status}"`,
@@ -159,7 +159,7 @@ export class TheaterApiService {
     };
   }
 
-  private _toBase64String(obj: any): string {
+  private toBase64String(obj: any): string {
     const jsonStr = JSON.stringify(obj);
     return Buffer.from(jsonStr).toString('base64');
   }

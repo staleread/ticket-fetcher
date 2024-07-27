@@ -192,7 +192,7 @@ describe('TicketService', () => {
       const result = await ticketService.getAvailableTickets(validEventId);
 
       expect(result.isSuccess()).toBe(true);
-      expect(result.value.length).toBe(2);
+      expect(result.getValue().length).toBe(2);
     });
 
     it('should throw if price cannot be found by zoneId', async () => {
@@ -235,8 +235,11 @@ describe('TicketService', () => {
       const result = await ticketService.getAvailableTickets(validEventId);
 
       expect(result.isFailure()).toBe(true);
-      expect(result.error.message).toBe('Price not found');
-      expect(result.error.code).toBe(404);
+
+      const error = result.getError();
+
+      expect(error.message).toBe('Price not found');
+      expect(error.code).toBe(404);
     });
 
     it('should throw if section is not found', async () => {
@@ -279,8 +282,11 @@ describe('TicketService', () => {
       const result = await ticketService.getAvailableTickets(validEventId);
 
       expect(result.isFailure()).toBe(true);
-      expect(result.error.message).toBe('Section not found');
-      expect(result.error.code).toBe(404);
+
+      const error = result.getError();
+
+      expect(error.message).toBe('Section not found');
+      expect(error.code).toBe(404);
     });
 
     it('should return failure on invalid eventId', async () => {

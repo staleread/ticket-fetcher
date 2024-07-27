@@ -2,8 +2,8 @@ export type ErrorResult = { message: string; code: number };
 
 export class Result<T> {
   constructor(
-    private _value?: T,
-    private _error?: ErrorResult,
+    private value?: T,
+    private error?: ErrorResult,
   ) {}
 
   static success<T>(value: T): Result<T> {
@@ -18,24 +18,24 @@ export class Result<T> {
     return new Result<any>(undefined, errorResult);
   }
 
-  get value(): T {
-    if (this._value === undefined) {
+  getValue(): T {
+    if (this.value === undefined) {
       throw new Error('Cannot retrieve the value of failure');
     }
 
-    return this._value;
+    return this.value;
   }
 
-  get error(): ErrorResult {
-    if (this._error === undefined) {
+  getError(): ErrorResult {
+    if (this.error === undefined) {
       throw new Error('Cannot retrieve the error from successful result');
     }
 
-    return this._error;
+    return this.error;
   }
 
   isSuccess() {
-    return this._error === undefined;
+    return this.error === undefined;
   }
 
   isFailure() {

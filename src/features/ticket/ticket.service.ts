@@ -9,7 +9,7 @@ import { AvailableTicketDto } from './dto/available-ticket.dto';
 
 @Injectable()
 export class TicketService {
-  constructor(private readonly _theaterApiService: TheaterApiService) {}
+  constructor(private readonly theaterApiService: TheaterApiService) {}
 
   async getAvailableTickets(eventId: number): Promise<Result<AvailableTicketDto[]>> {
     if (eventId < 1) {
@@ -17,21 +17,21 @@ export class TicketService {
     }
 
     const pricesResult: Result<PriceDto[]> =
-      await this._theaterApiService.getPricesPerZone(eventId);
+      await this.theaterApiService.getPricesPerZone(eventId);
 
     if (pricesResult.isFailure()) {
-      return Result.fromFailure(pricesResult.error);
+      return Result.fromFailure(pricesResult.getError());
     }
 
     const theaterLayoutResult: Result<TheaterLayoutDto> =
-      await this._theaterApiService.getTheaterLayout(eventId);
+      await this.theaterApiService.getTheaterLayout(eventId);
 
     if (theaterLayoutResult.isFailure()) {
-      return Result.fromFailure(theaterLayoutResult.error);
+      return Result.fromFailure(theaterLayoutResult.getError());
     }
 
-    const prices: PriceDto[] = pricesResult.value;
-    const { seats, sections } = theaterLayoutResult.value;
+    const prices: PriceDto[] = pricesResult.getValue();
+    const { seats, sections } = theaterLayoutResult.getValue();
 
     const AVAILABLE_SEAT_STATUS = '0';
 
@@ -39,10 +39,10 @@ export class TicketService {
       (seat: SeatDto) => seat.statusCode === AVAILABLE_SEAT_STATUS,
     );
 
-    return this._toAvailableTicketsResult(availableSeats, sections, prices);
+    return this.toAvailableTicketsResult(availableSeats, sections, prices);
   }
 
-  private _toAvailableTicketsResult(
+  private toAvailableTicketsResult(
     availableSeats: SeatDto[],
     sections: SectionDto[],
     prices: PriceDto[],
