@@ -25,10 +25,6 @@ describe('TicketController', () => {
     ticketService = moduleRef.get<TicketService>(TicketService);
   });
 
-  it('should be defined', () => {
-    expect(ticketController).toBeDefined();
-  });
-
   describe('getAvailableTickets', () => {
     it('should return tickets', async () => {
       const validEventId = 20000;

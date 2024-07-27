@@ -40,10 +40,6 @@ describe('TicketService', () => {
     ticketService = moduleRef.get<TicketService>(TicketService);
   });
 
-  it('should be defined', () => {
-    expect(ticketService).toBeDefined();
-  });
-
   describe('getAvailableTickets', () => {
     it('should assemble tickets correctly', async () => {
       const validEventId = 20000;
