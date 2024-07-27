@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import axios from 'axios';
 import { ErrorResult, Result } from '../../common/exceptions/result';
-import { LoginInfo } from '../../config/login-info';
+import { LoginInfo } from '../../config/login-info.types';
 import { PriceDto } from './dto/price.dto';
 import { SeatDto } from './dto/seat.dto';
 import { SectionDto } from './dto/section.dto';
