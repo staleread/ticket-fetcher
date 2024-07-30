@@ -3,7 +3,7 @@ import { Test } from '@nestjs/testing';
 import { Result } from '../../../src/common/exceptions/result';
 import { PriceDto, TheaterLayoutDto } from '../../../src/infrastructure/theater-api/dto.types';
 import { TheaterApiService } from '../../../src/infrastructure/theater-api/theater-api.service';
-import { AvailableTicketDto } from '../../../src/features/ticket/dto/available-ticket.dto';
+import { AvailableTicketDto } from '../../../src/features/ticket/dto.types';
 import { TicketService } from '../../../src/features/ticket/ticket.service';
 
 describe('TicketService', () => {

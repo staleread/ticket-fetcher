@@ -1,6 +1,6 @@
 import { Test } from '@nestjs/testing';
 import { Result } from '../../../src/common/exceptions/result';
-import { AvailableTicketDto } from '../../../src/features/ticket/dto/available-ticket.dto';
+import { AvailableTicketDto } from '../../../src/features/ticket/dto.types';
 import { TicketController } from '../../../src/features/ticket/ticket.controller';
 import { TicketService } from '../../../src/features/ticket/ticket.service';
 

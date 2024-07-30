@@ -1,6 +1,6 @@
 import { Controller, Get, HttpException, Param } from '@nestjs/common';
 import { ErrorResult, Result } from '../../common/exceptions/result';
-import { AvailableTicketDto } from './dto/available-ticket.dto';
+import { AvailableTicketDto } from './dto.types';
 import { TicketService } from './ticket.service';
 
 @Controller('ticket')

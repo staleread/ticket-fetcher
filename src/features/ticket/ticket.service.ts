@@ -7,7 +7,7 @@ import {
   TheaterLayoutDto,
 } from '../../infrastructure/theater-api/dto.types';
 import { TheaterApiService } from '../../infrastructure/theater-api/theater-api.service';
-import { AvailableTicketDto } from './dto/available-ticket.dto';
+import { AvailableTicketDto } from './dto.types';
 
 @Injectable()
 export class TicketService {
