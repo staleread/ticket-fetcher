@@ -1,9 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { Result } from '../../common/exceptions/result';
-import { PriceDto } from '../../infrastructure/theater-api/dto/price.dto';
-import { SeatDto } from '../../infrastructure/theater-api/dto/seat.dto';
-import { SectionDto } from '../../infrastructure/theater-api/dto/section.dto';
-import { TheaterLayoutDto } from '../../infrastructure/theater-api/dto/theater-layout.dto';
+import {
+  PriceDto,
+  SeatDto,
+  SectionDto,
+  TheaterLayoutDto,
+} from '../../infrastructure/theater-api/dto.types';
 import { TheaterApiService } from '../../infrastructure/theater-api/theater-api.service';
 import { AvailableTicketDto } from './dto/available-ticket.dto';
 

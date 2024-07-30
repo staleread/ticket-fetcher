@@ -1,8 +1,7 @@
 import { HttpException } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 import { Result } from '../../../src/common/exceptions/result';
-import { PriceDto } from '../../../src/infrastructure/theater-api/dto/price.dto';
-import { TheaterLayoutDto } from '../../../src/infrastructure/theater-api/dto/theater-layout.dto';
+import { PriceDto, TheaterLayoutDto } from '../../../src/infrastructure/theater-api/dto.types';
 import { TheaterApiService } from '../../../src/infrastructure/theater-api/theater-api.service';
 import { AvailableTicketDto } from '../../../src/features/ticket/dto/available-ticket.dto';
 import { TicketService } from '../../../src/features/ticket/ticket.service';

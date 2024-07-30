@@ -1,19 +1,23 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import axios from 'axios';
+import { Axios, AxiosError, AxiosResponse, default as axios } from 'axios';
 import { ErrorResult, Result } from '../../common/exceptions/result';
 import { LoginInfo } from '../../config/login-info.types';
-import { PriceDto } from './dto/price.dto';
-import { SeatDto } from './dto/seat.dto';
-import { SectionDto } from './dto/section.dto';
-import { TheaterLayoutDto } from './dto/theater-layout.dto';
+import { PriceDto, SeatDto, SectionDto, TheaterLayoutDto } from './dto.types';
+import {
+  PerformanceDetailResult,
+  PriceResult,
+  SeatBriefResult,
+  SeatResult,
+  SectionResult,
+} from './result.types';
 
 @Injectable()
 export class TheaterApiService {
   static REQUEST_ID = 1;
 
   private readonly loginInfo: LoginInfo;
-  private readonly httpClient: any;
+  private readonly httpClient: Axios;
 
   constructor(configService: ConfigService) {
     const loginInfo: LoginInfo | undefined =
@@ -51,13 +55,16 @@ export class TheaterApiService {
     };
 
     try {
-      const response = await this.httpClient.get('', {
-        params: {
-          id: TheaterApiService.REQUEST_ID,
-          method: 'GetPerformanceDetailWithDiscountingEx',
-          params: this.toBase64String(queryBlobParams),
+      const response: AxiosResponse<PerformanceDetailResult> = await this.httpClient.get(
+        '',
+        {
+          params: {
+            id: TheaterApiService.REQUEST_ID,
+            method: 'GetPerformanceDetailWithDiscountingEx',
+            params: this.toBase64String(queryBlobParams),
+          },
         },
-      });
+      );
 
       return this.retrievePrices(response.data);
     } catch (err) {
@@ -94,14 +101,19 @@ export class TheaterApiService {
     }
   }
 
-  private retrievePrices(responseBody: any): Result<PriceDto[]> {
-    if (responseBody.error) {
-      return Result.failure(`Error from external API host: ${responseBody.error}`, 502);
+  private retrievePrices(
+    performanceDetailResult: PerformanceDetailResult,
+  ): Result<PriceDto[]> {
+    if (performanceDetailResult.error) {
+      return Result.failure(
+        `Error from external API host: ${performanceDetailResult.error}`,
+        502,
+      );
     }
 
     const prices: PriceDto[] =
-      responseBody.result.GetPerformanceDetailWithDiscountingExResult.Price.map(
-        (p: { zone_no: string; price: string }) => ({
+      performanceDetailResult.result.GetPerformanceDetailWithDiscountingExResult.Price.map(
+        (p: PriceResult) => ({
           zoneId: p.zone_no,
           price: Number(p.price),
         }),
@@ -110,15 +122,20 @@ export class TheaterApiService {
     return Result.success(prices);
   }
 
-  private retrieveTheaterLayout(responseBody: any): Result<TheaterLayoutDto> {
-    if (responseBody.error) {
-      return Result.failure(`Error from external API host: ${responseBody.error}`, 502);
+  private retrieveTheaterLayout(
+    seatBriefResult: SeatBriefResult,
+  ): Result<TheaterLayoutDto> {
+    if (seatBriefResult.error) {
+      return Result.failure(
+        `Error from external API host: ${seatBriefResult.error}`,
+        502,
+      );
     }
 
-    const seats: SeatDto[] = responseBody.result.GetSeatsBriefExResults.S.filter(
-      (seatWrapper: { D: string }) => !seatWrapper.D.startsWith('0'),
+    const seats: SeatDto[] = seatBriefResult.result.GetSeatsBriefExResults.S.filter(
+      (seat: SeatResult) => !seat.D.startsWith('0'),
     )
-      .map((seatWrapper: { D: string }) => seatWrapper.D.split(','))
+      .map((seat: SeatResult) => seat.D.split(','))
       .map((fields: string[]) => ({
         id: fields[4],
         statusCode: fields[3],
@@ -128,19 +145,20 @@ export class TheaterApiService {
         sectionId: fields[0],
       }));
 
-    const sections: SectionDto[] = responseBody.result.GetSeatsBriefExResults.Section.map(
-      (section: { section: string; section_desc: string }) => ({
-        id: section.section,
-        description: section.section_desc,
-      }),
-    );
+    const sections: SectionDto[] =
+      seatBriefResult.result.GetSeatsBriefExResults.Section.map(
+        (section: SectionResult) => ({
+          id: section.section,
+          description: section.section_desc,
+        }),
+      );
 
     const layout: TheaterLayoutDto = { seats, sections };
 
     return Result.success(layout);
   }
 
-  private resolveRequestError(error: any): ErrorResult {
+  private resolveRequestError(error: AxiosError): ErrorResult {
     if (error.response) {
       return {
         message: `Got bad response from external API with status: "${error.response.status}"`,

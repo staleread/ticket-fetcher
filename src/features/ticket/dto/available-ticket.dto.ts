@@ -1,4 +1,4 @@
-import { SectionDto } from '../../../infrastructure/theater-api/dto/section.dto';
+import { SectionDto } from '../../../infrastructure/theater-api/dto.types';
 
 export interface AvailableTicketDto {
   seatId: string;
