@@ -1,6 +1,6 @@
 {
   "name": "ticket-fetcher",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "license": "ISC",
   "description": "Simple API for fetching available tickets for specific event",
   "repository": {
@@ -9,6 +9,8 @@
   },
   "scripts": {
     "start": "nest start",
+    "start:prod": "node dist/main",
+    "build": "nest build",
     "test": "npx jest",
     "test:watch": "npx jest --watch",
     "check": "npx @biomejs/biome check ./src",
