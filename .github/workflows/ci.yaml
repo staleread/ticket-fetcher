@@ -1,0 +1,26 @@
+name: CI
+on: [pull_request]
+jobs:
+  check_fotmatting:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install packages
+        run: npm install
+      
+      - name: Linter
+        run: npm run check
+
+  run_tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        
+      - name: Install packages
+        run: npm install
+
+      - name: Run Tests
+        run: npm test
