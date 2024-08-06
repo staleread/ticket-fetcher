@@ -10,11 +10,11 @@ API to fetch available tickets for a specific performance you can find on
 The app is expecting the following environment variables are defined:
 
 - `PORT` (Default: 5000) - the port the app is listening on
-- `THEATER_API_DOMAIN` - the domain of the theatre API
-- `THEATER_API_TIMEOUT` - response timeout of API
-- `THEATER_API_SESSION_KEY`
-- `THEATER_API_SOURCE_NUMBER`
-- `THEATER_API_MOS` - the mode of sale
+- `THEATRE_API_DOMAIN` - the domain of the theatre API
+- `THEATRE_API_TIMEOUT` - response timeout of API
+- `THEATRE_API_SESSION_KEY`
+- `THEATRE_API_SOURCE_NUMBER`
+- `THEATRE_API_MOS` - the mode of sale
 
 Those can be defined either by exporting them manually (in bash `export VARIABLE=VALUE`) or by creating the `.env` file in project directory. For the
 latter option you may look at `.env.example` file with sample values.
