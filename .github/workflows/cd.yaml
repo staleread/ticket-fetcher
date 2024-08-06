@@ -45,6 +45,7 @@ jobs:
           -p ${{ vars.ENV_HOST_PORT }}:${{ vars.ENV_CONTAINER_PORT }} \
           --name ${{ vars.CONTAINER_NAME }} \
           ${{ env.IMAGE_NAME }};\
+        docker image prune -f
     steps:
       - name: Run remote server command
         run: |
