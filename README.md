@@ -1,34 +1,63 @@
 # ticket-fetcher
 
-## Task
+API to fetch available tickets for a specific performance you can find on
+[website](https://www.centertheatregroup.org/booking/syos?perf_no=21920&facility_no=10).
 
-Build a simple service which will fetch concert tickets from a [website](https://www.centertheatregroup.org/booking/syos?perf_no=21920&facility_no=10)
-and return them to user through a HTTP call
+## How to launch?
 
-Ticket data should contain these fields:
+### Set environment variables
 
-- Section
-- Row
-- Seat number
-- Price
+The app is expecting the following environment variables are defined:
 
-P.S. If it doesn't have tickets anymore - please use any other event on this platform
+- `PORT` (Default: 5000) - the port the app is listening on
+- `THEATER_API_DOMAIN` - the domain of the theatre API
+- `THEATER_API_TIMEOUT` - response timeout of API
+- `THEATER_API_SESSION_KEY`
+- `THEATER_API_SOURCE_NUMBER`
+- `THEATER_API_MOS` - the mode of sale
 
-## Principles
+Those can be defined either by exporting them manually (in bash `export VARIABLE=VALUE`) or by creating the `.env` file in project directory. For the
+latter option you may look at `.env.example` file with sample values.
 
-- Implement all with Typescript
-- Implement with Nest.js
-- Try to keep CPU complexity as little as possible
-- Try to follow layered architecture principles: separate business logic from third-party integrations, etc.
+### Run using Node
 
-## Bonus points:
+> [!IMPORTANT]
+> Ensure Node.JS is installed on your system
 
-- Use GraphQL as a way to query your service
-- Add e2e test that demonstrate that everything works as expected
+Install required packages by running `npm install` or `npm i` for short.
+Then run `npm start` to launch the app.
 
-## Definition of Done:
+### Run as Docker container
 
-- Service can be launched with a command npm start
-- Tests can be launched on any environment and they will be green
-- Tests are verifying that app works as expected
-- App can be queries through GraphQL endpoint to fetch available tickets for specific event ID.
+> [!IMPORTANT]
+> Ensure Docker is installed on your system and Docker daemon is running 
+
+1. Get the image
+
+```bash
+# pull from Docker Hub
+docker pull staleread/ticker-fetcher
+
+# or build by yourself
+docker build -t my-app:latest .
+```
+
+> [!WARNING]
+> A building process involves multi-staging to decouple the build stages
+> and make the size of resulting image as small as possible. This leads to
+> dangling images (`<none>:<none>`) being generated. You can remove them
+> by running `docker image prune -f`
+
+2. Run the container
+
+```bash
+image=staleread/ticket-fetcher  # or your custom build name
+
+docker run \
+  -it \
+  --expose 5000 \
+  -p 80:5000 \
+  --env-file .env \
+  --name my-container
+  $image
+```
