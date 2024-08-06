@@ -4,14 +4,14 @@ import {
   PriceDto,
   SeatDto,
   SectionDto,
-  TheaterLayoutDto,
-} from '../../infrastructure/theater-api/dto.types';
-import { TheaterApiService } from '../../infrastructure/theater-api/theater-api.service';
+  TheatreLayoutDto,
+} from '../../infrastructure/theatre-api/dto.types';
+import { TheatreApiService } from '../../infrastructure/theatre-api/theatre-api.service';
 import { AvailableTicketDto } from './dto.types';
 
 @Injectable()
 export class TicketService {
-  constructor(private readonly theaterApiService: TheaterApiService) {}
+  constructor(private readonly theatreApiService: TheatreApiService) {}
 
   async getAvailableTickets(eventId: number): Promise<Result<AvailableTicketDto[]>> {
     if (eventId < 1) {
@@ -19,21 +19,21 @@ export class TicketService {
     }
 
     const pricesResult: Result<PriceDto[]> =
-      await this.theaterApiService.getPricesPerZone(eventId);
+      await this.theatreApiService.getPricesPerZone(eventId);
 
     if (pricesResult.isFailure()) {
       return Result.fromFailure(pricesResult.getError());
     }
 
-    const theaterLayoutResult: Result<TheaterLayoutDto> =
-      await this.theaterApiService.getTheaterLayout(eventId);
+    const theatreLayoutResult: Result<TheatreLayoutDto> =
+      await this.theatreApiService.getTheatreLayout(eventId);
 
-    if (theaterLayoutResult.isFailure()) {
-      return Result.fromFailure(theaterLayoutResult.getError());
+    if (theatreLayoutResult.isFailure()) {
+      return Result.fromFailure(theatreLayoutResult.getError());
     }
 
     const prices: PriceDto[] = pricesResult.getValue();
-    const { seats, sections } = theaterLayoutResult.getValue();
+    const { seats, sections } = theatreLayoutResult.getValue();
 
     const AVAILABLE_SEAT_STATUS = '0';
 

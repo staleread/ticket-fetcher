@@ -1,6 +1,6 @@
 export default () => ({
   port: Number(process.env.PORT),
-  theaterApi: {
+  theatreApi: {
     domain: process.env.THEATRE_API_DOMAIN,
     timeout: Number(process.env.THEATRE_API_TIMEOUT),
     loginInfo: {

@@ -1,19 +1,19 @@
 import { HttpException } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 import { Result } from '../../../src/common/exceptions/result';
-import { PriceDto, TheaterLayoutDto } from '../../../src/infrastructure/theater-api/dto.types';
-import { TheaterApiService } from '../../../src/infrastructure/theater-api/theater-api.service';
+import { PriceDto, TheatreLayoutDto } from '../../../src/infrastructure/theatre-api/dto.types';
+import { TheatreApiService } from '../../../src/infrastructure/theatre-api/theatre-api.service';
 import { AvailableTicketDto } from '../../../src/features/ticket/dto.types';
 import { TicketService } from '../../../src/features/ticket/ticket.service';
 
 describe('TicketService', () => {
   let ticketService: TicketService;
 
-  const mockTheaterAPIService = {
+  const mockTheatreAPIService = {
     getPricesPerZone: async (_: number): Promise<Result<PriceDto[]>> => {
       return new Promise((res) => res(Result.success([])));
     },
-    getTheaterLayout: async (_: number): Promise<Result<TheaterLayoutDto>> => {
+    getTheatreLayout: async (_: number): Promise<Result<TheatreLayoutDto>> => {
       return new Promise((res) =>
         res(
           Result.success({
@@ -30,8 +30,8 @@ describe('TicketService', () => {
       providers: [
         TicketService,
         {
-          provide: TheaterApiService,
-          useValue: mockTheaterAPIService,
+          provide: TheatreApiService,
+          useValue: mockTheatreAPIService,
         },
       ],
     }).compile();
@@ -54,7 +54,7 @@ describe('TicketService', () => {
         },
       ];
 
-      const mockTheaterLayout: TheaterLayoutDto = {
+      const mockTheatreLayout: TheatreLayoutDto = {
         seats: [
           {
             id: '111',
@@ -105,16 +105,16 @@ describe('TicketService', () => {
       ];
 
       jest
-        .spyOn(mockTheaterAPIService, 'getPricesPerZone')
+        .spyOn(mockTheatreAPIService, 'getPricesPerZone')
         .mockImplementation(
           (_: number) => new Promise((resolve) => resolve(Result.success(mockPrices))),
         );
 
       jest
-        .spyOn(mockTheaterAPIService, 'getTheaterLayout')
+        .spyOn(mockTheatreAPIService, 'getTheatreLayout')
         .mockImplementation(
           (_: number) =>
-            new Promise((resolve) => resolve(Result.success(mockTheaterLayout))),
+            new Promise((resolve) => resolve(Result.success(mockTheatreLayout))),
         );
 
       expect(await ticketService.getAvailableTickets(validEventId)).toEqual(
@@ -136,7 +136,7 @@ describe('TicketService', () => {
         },
       ];
 
-      const mockTheaterLayout: TheaterLayoutDto = {
+      const mockTheatreLayout: TheatreLayoutDto = {
         seats: [
           {
             id: '111',
@@ -172,16 +172,16 @@ describe('TicketService', () => {
       };
 
       jest
-        .spyOn(mockTheaterAPIService, 'getPricesPerZone')
+        .spyOn(mockTheatreAPIService, 'getPricesPerZone')
         .mockImplementation(
           (_: number) => new Promise((resolve) => resolve(Result.success(mockPrices))),
         );
 
       jest
-        .spyOn(mockTheaterAPIService, 'getTheaterLayout')
+        .spyOn(mockTheatreAPIService, 'getTheatreLayout')
         .mockImplementation(
           (_: number) =>
-            new Promise((resolve) => resolve(Result.success(mockTheaterLayout))),
+            new Promise((resolve) => resolve(Result.success(mockTheatreLayout))),
         );
 
       const result = await ticketService.getAvailableTickets(validEventId);
@@ -195,7 +195,7 @@ describe('TicketService', () => {
 
       const mockPrices: PriceDto[] = [];
 
-      const mockTheaterLayout: TheaterLayoutDto = {
+      const mockTheatreLayout: TheatreLayoutDto = {
         seats: [
           {
             id: '333',
@@ -215,16 +215,16 @@ describe('TicketService', () => {
       };
 
       jest
-        .spyOn(mockTheaterAPIService, 'getPricesPerZone')
+        .spyOn(mockTheatreAPIService, 'getPricesPerZone')
         .mockImplementation(
           (_: number) => new Promise((resolve) => resolve(Result.success(mockPrices))),
         );
 
       jest
-        .spyOn(mockTheaterAPIService, 'getTheaterLayout')
+        .spyOn(mockTheatreAPIService, 'getTheatreLayout')
         .mockImplementation(
           (_: number) =>
-            new Promise((resolve) => resolve(Result.success(mockTheaterLayout))),
+            new Promise((resolve) => resolve(Result.success(mockTheatreLayout))),
         );
 
       const result = await ticketService.getAvailableTickets(validEventId);
@@ -247,7 +247,7 @@ describe('TicketService', () => {
         },
       ];
 
-      const mockTheaterLayout: TheaterLayoutDto = {
+      const mockTheatreLayout: TheatreLayoutDto = {
         seats: [
           {
             id: '333',
@@ -262,16 +262,16 @@ describe('TicketService', () => {
       };
 
       jest
-        .spyOn(mockTheaterAPIService, 'getPricesPerZone')
+        .spyOn(mockTheatreAPIService, 'getPricesPerZone')
         .mockImplementation(
           (_: number) => new Promise((resolve) => resolve(Result.success(mockPrices))),
         );
 
       jest
-        .spyOn(mockTheaterAPIService, 'getTheaterLayout')
+        .spyOn(mockTheatreAPIService, 'getTheatreLayout')
         .mockImplementation(
           (_: number) =>
-            new Promise((resolve) => resolve(Result.success(mockTheaterLayout))),
+            new Promise((resolve) => resolve(Result.success(mockTheatreLayout))),
         );
 
       const result = await ticketService.getAvailableTickets(validEventId);

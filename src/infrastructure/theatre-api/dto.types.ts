@@ -17,7 +17,7 @@ export interface SectionDto {
   description: string;
 }
 
-export interface TheaterLayoutDto {
+export interface TheatreLayoutDto {
   seats: SeatDto[];
   sections: SectionDto[];
 }

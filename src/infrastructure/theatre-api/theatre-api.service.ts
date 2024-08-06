@@ -3,7 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { Axios, AxiosError, AxiosResponse, default as axios } from 'axios';
 import { ErrorResult, Result } from '../../common/exceptions/result';
 import { LoginInfo } from '../../config/login-info.types';
-import { PriceDto, SeatDto, SectionDto, TheaterLayoutDto } from './dto.types';
+import { PriceDto, SeatDto, SectionDto, TheatreLayoutDto } from './dto.types';
 import {
   PerformanceDetailResult,
   PriceResult,
@@ -13,7 +13,7 @@ import {
 } from './result.types';
 
 @Injectable()
-export class TheaterApiService {
+export class TheatreApiService {
   static REQUEST_ID = 1;
 
   private readonly loginInfo: LoginInfo;
@@ -21,7 +21,7 @@ export class TheaterApiService {
 
   constructor(configService: ConfigService) {
     const loginInfo: LoginInfo | undefined =
-      configService.get<LoginInfo>('theaterApi.loginInfo');
+      configService.get<LoginInfo>('theatreApi.loginInfo');
 
     if (!loginInfo) {
       throw new Error('Failed to retrieve API login info from config');
@@ -29,13 +29,13 @@ export class TheaterApiService {
 
     this.loginInfo = loginInfo;
 
-    const domain: string | undefined = configService.get<string>('theaterApi.domain');
+    const domain: string | undefined = configService.get<string>('theatreApi.domain');
 
     if (!domain) {
       throw new Error('Failed to retrieve API domain from config');
     }
 
-    const timeout: number | undefined = configService.get<number>('theaterApi.timeout');
+    const timeout: number | undefined = configService.get<number>('theatreApi.timeout');
 
     if (!timeout) {
       throw new Error('Failed to retrieve API timeout from config');
@@ -59,7 +59,7 @@ export class TheaterApiService {
         '',
         {
           params: {
-            id: TheaterApiService.REQUEST_ID,
+            id: TheatreApiService.REQUEST_ID,
             method: 'GetPerformanceDetailWithDiscountingEx',
             params: this.toBase64String(queryBlobParams),
           },
@@ -73,7 +73,7 @@ export class TheaterApiService {
     }
   }
 
-  async getTheaterLayout(eventId: number): Promise<Result<TheaterLayoutDto>> {
+  async getTheatreLayout(eventId: number): Promise<Result<TheatreLayoutDto>> {
     const queryBlobParams = {
       sSessionKey: this.loginInfo.sessionKey,
       iModeOfSale: this.loginInfo.modeOfSale,
@@ -88,13 +88,13 @@ export class TheaterApiService {
     try {
       const response = await this.httpClient.get('', {
         params: {
-          id: TheaterApiService.REQUEST_ID,
+          id: TheatreApiService.REQUEST_ID,
           method: 'GetSeatsBriefWithMOS',
           params: this.toBase64String(queryBlobParams),
         },
       });
 
-      return this.retrieveTheaterLayout(response.data);
+      return this.retrieveTheatreLayout(response.data);
     } catch (err) {
       const errorResult: ErrorResult = this.resolveRequestError(err);
       return Result.fromFailure(errorResult);
@@ -122,9 +122,9 @@ export class TheaterApiService {
     return Result.success(prices);
   }
 
-  private retrieveTheaterLayout(
+  private retrieveTheatreLayout(
     seatBriefResult: SeatBriefResult,
-  ): Result<TheaterLayoutDto> {
+  ): Result<TheatreLayoutDto> {
     if (seatBriefResult.error) {
       return Result.failure(
         `Error from external API host: ${seatBriefResult.error}`,
@@ -153,7 +153,7 @@ export class TheaterApiService {
         }),
       );
 
-    const layout: TheaterLayoutDto = { seats, sections };
+    const layout: TheatreLayoutDto = { seats, sections };
 
     return Result.success(layout);
   }
