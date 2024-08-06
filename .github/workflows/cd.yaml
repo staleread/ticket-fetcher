@@ -1,0 +1,54 @@
+name: CD
+on:
+  push:
+    branches: [main]
+env:
+  IMAGE_NAME: ${{ secrets.REGISTRY_USERNAME }}/${{ secrets.REGISTRY_REPO }}
+jobs:
+  publish_docker_image:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Load codebase
+        uses: actions/checkout@v4
+
+      - name: Build Docker Image
+        run: docker build -t $IMAGE_NAME .
+
+      - name: Login to registry
+        run: |
+          docker login \
+            -u '${{ secrets.REGISTRY_USERNAME }}' \
+            -p '${{ secrets.REGISTRY_PASSWORD }}' \
+            ${{ secrets.REGISTRY_URL }}
+
+      - name: Publish Image
+        run: docker push $IMAGE_NAME
+
+  restart_server:
+    needs: publish_docker_image
+    runs-on: ubuntu-latest
+    env:
+      Remote_Login: ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}
+      Remote_Command: |
+        docker pull ${{ env.IMAGE_NAME }};\
+        docker stop ${{ vars.CONTAINER_NAME }} || true;\
+        docker rm ${{ vars.CONTAINER_NAME }} || true;\
+        docker run \
+          -e PORT=${{ secrets.ENV_CONTAINER_PORT }} \
+          -e THEATER_API_DOMAIN=${{ secrets.ENV_THEATER_API_DOMAIN }} \
+          -e THEATER_API_TIMEOUT=${{ secrets.ENV_THEATER_API_TIMEOUT }} \
+          -e THEATER_API_SESSION_KEY=${{ secrets.ENV_THEATER_API_SESSION_KEY }} \
+          -e THEATER_API_SOURCE_NUMBER=${{ secrets.ENV_THEATER_API_SOURCE_NUMBER }} \
+          -e THEATER_API_MOS=${{ secrets.ENV_THEATER_API_MOS }} \
+          -d \
+          --expose ${{ vars.ENV_CONTAINER_PORT }} \
+          -p ${{ vars.ENV_HOST_PORT }}:${{ vars.ENV_CONTAINER_PORT }} \
+          --name ${{ vars.CONTAINER_NAME }} \
+          ${{ env.IMAGE_NAME }};\
+    steps:
+      - name: Run remote server command
+        run: |
+          echo "${{ secrets.SSH_KNOWN_HOST_ENTRIES }}" >> ~/.ssh/known_hosts
+          eval "$(ssh-agent -s)"
+          ssh-add - <<< '${{ secrets.SSH_PRIVATE_KEY }}'
+          ssh $Remote_Login "$Remote_Command"
