@@ -1,7 +1,7 @@
 # ticket-fetcher
 
 API to fetch available tickets for a specific performance you can find on
-[website](https://www.centertheatregroup.org/booking/syos?perf_no=21920&facility_no=10).
+the [website](https://www.centertheatregroup.org/booking/syos?perf_no=21920&facility_no=10).
 
 ## How to launch?
 
@@ -36,17 +36,17 @@ Then run `npm start` to launch the app.
 
 ```bash
 # pull from Docker Hub
-docker pull staleread/ticker-fetcher
+docker pull staleread/ticket-fetcher
 
 # or build by yourself
 docker build -t my-app:latest .
 ```
 
 > [!WARNING]
-> A building process involves multi-staging to decouple the build stages
-> and make the size of resulting image as small as possible. This leads to
-> dangling images (`<none>:<none>`) being generated. You can remove them
-> by running `docker image prune -f`
+> Building process involves multi-staging approach to decouple the build
+> stages and make the size of resulting image as small as possible. This
+> leads to dangling images (`<none>:<none>`) being generated. You can remove
+> them by running `docker image prune -f`
 
 2. Run the container
 
