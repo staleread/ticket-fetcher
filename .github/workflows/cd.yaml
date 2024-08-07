@@ -7,6 +7,8 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       IMAGE_NAME: ${{ secrets.REGISTRY_USERNAME }}/${{ secrets.REGISTRY_REPO }}
+    steps:
+      - run: echo "Setting globals..."
 
   publish_docker_image:
     needs: [get_globals]
