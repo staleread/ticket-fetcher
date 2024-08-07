@@ -3,22 +3,14 @@ on:
   push:
     branches: [main]
 jobs:
-  get_globals:
-    runs-on: ubuntu-latest
-    outputs:
-      IMAGE_NAME: ${{ secrets.REGISTRY_USERNAME }}/${{ secrets.REGISTRY_REPO }}
-    steps:
-      - run: echo "Setting globals..."
-
   publish_docker_image:
-    needs: [get_globals]
     runs-on: ubuntu-latest
     steps:
       - name: Load codebase
         uses: actions/checkout@v4
 
       - name: Build Docker Image
-        run: docker build -t ${{ needs.get_globals.outputs.IMAGE_NAME }} .
+        run: docker build -t ${{ secrets.IMAGE_NAME }} .
 
       - name: Login to registry
         run: |
@@ -28,15 +20,14 @@ jobs:
             ${{ secrets.REGISTRY_URL }}
 
       - name: Publish Image
-        run: docker push ${{ needs.get_globals.outputs.IMAGE_NAME }}
+        run: docker push ${{ secrets.IMAGE_NAME }}
 
   restart_server:
-    needs: [get_globals, publish_docker_image]
+    needs: publish_docker_image
     runs-on: ubuntu-latest
     env:
-      Remote_Login: ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}
       Remote_Command: |
-        docker pull ${{ needs.get_globals.outputs.IMAGE_NAME }};\
+        docker pull ${{ secrets.IMAGE_NAME }};\
         docker stop ${{ vars.CONTAINER_NAME }} || true;\
         docker rm ${{ vars.CONTAINER_NAME }} || true;\
         docker run \
@@ -50,7 +41,7 @@ jobs:
           --expose ${{ vars.ENV_CONTAINER_PORT }} \
           -p ${{ vars.ENV_HOST_PORT }}:${{ vars.ENV_CONTAINER_PORT }} \
           --name ${{ vars.CONTAINER_NAME }} \
-          ${{ needs.get_globals.outputs.IMAGE_NAME }};\
+          ${{ secrets.IMAGE_NAME }};\
         docker image prune -f
     steps:
       - name: Run remote server command
@@ -58,4 +49,4 @@ jobs:
           echo "${{ secrets.SSH_KNOWN_HOST_ENTRIES }}" >> ~/.ssh/known_hosts
           eval "$(ssh-agent -s)"
           ssh-add - <<< '${{ secrets.SSH_PRIVATE_KEY }}'
-          ssh $Remote_Login "$Remote_Command"
+          ssh ${{ secrets.SSH_LOGIN }} "$Remote_Command"
