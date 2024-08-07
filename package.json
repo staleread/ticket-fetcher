@@ -1,6 +1,6 @@
 {
   "name": "ticket-fetcher",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "license": "ISC",
   "description": "Simple API for fetching available tickets for specific event",
   "repository": {
